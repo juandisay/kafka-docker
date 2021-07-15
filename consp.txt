@@ -1,0 +1,29 @@
+zookeeper:
+  image: wurstmeister/zookeeper
+  ports:
+    - "2181:2181"
+kafka:
+  build: .
+  ports:
+    - "9092:9092"
+  links:
+    - zookeeper:zk
+  environment:
+    KAFKA_ADVERTISED_HOST_NAME: 192.168.59.103
+    KAFKA_ADVERTISED_PORT: 9092
+    KAFKA_CREATE_TOPICS: "test:1:1"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+
+
+
+    ➜ docker exec -it zookeeper bash
+root@98747a9eac65:/zookeeper-3.4.14# ./bin/zkCli.sh
+[zk: localhost:2181(CONNECTED) 2] ls /kafka-manager
+[configs, deleteClusters, clusters]
+[zk: localhost:2181(CONNECTED) 3] create /kafka-manager/mutex ""
+Created /kafka-manager/mutex
+[zk: localhost:2181(CONNECTED) 5] create /kafka-manager/mutex/locks ""
+Created /kafka-manager/mutex/locks
+[zk: localhost:2181(CONNECTED) 6] create /kafka-manager/mutex/leases ""
+Created /kafka-manager/mutex/leases
